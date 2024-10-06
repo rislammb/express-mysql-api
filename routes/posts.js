@@ -1,5 +1,4 @@
 const { Post } = require("../models");
-
 const router = require("express").Router();
 
 router.get("/", async (_req, res) => {
@@ -7,7 +6,7 @@ router.get("/", async (_req, res) => {
     const posts = await Post.findAll();
     res.json(posts);
   } catch (error) {
-    throw error;
+    res.status(500).json({ message: "Something went wrong!" });
   }
 });
 
@@ -17,7 +16,7 @@ router.post("/", async (req, res) => {
     post = await Post.create(post);
     res.status(201).json(post);
   } catch (error) {
-    throw error;
+    res.json({ message: "Something went wrong!" });
   }
 });
 
