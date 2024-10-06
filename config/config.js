@@ -8,6 +8,7 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: "mysql",
+    dialectModule: require("mysql2"),
     logging: false,
   },
   test: {
@@ -17,6 +18,7 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: "mysql",
+    dialectModule: require("mysql2"),
     logging: false,
   },
   production: {
@@ -26,6 +28,7 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: "mysql",
+    dialectModule: require("mysql2"),
     logging: false,
   },
 };
