@@ -1,15 +1,5 @@
 require("dotenv").config();
 
-let sslOptions = {};
-if (process.env.DB_SSL === "true") {
-  sslOptions = {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  };
-}
-
 module.exports = {
   development: {
     username: process.env.DB_USER,
@@ -38,7 +28,6 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: "mysql",
-    dialectOptions: sslOptions,
     dialectModule: require("mysql2"),
     logging: false,
   },
