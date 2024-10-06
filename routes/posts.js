@@ -6,17 +6,17 @@ router.get("/", async (_req, res) => {
     const posts = await Post.findAll();
     res.json(posts);
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong!" });
+    res.status(500).json(error);
   }
 });
 
 router.post("/", async (req, res) => {
-  let post = req.body;
+  const post = req.body;
   try {
-    post = await Post.create(post);
-    res.status(201).json(post);
+    const data = await Post.create(post);
+    res.status(201).json(data);
   } catch (error) {
-    res.json({ message: "Something went wrong!" });
+    res.status(error.code || 400).json(error);
   }
 });
 
