@@ -10,11 +10,9 @@ app.use(express.json());
 app.use("/posts", postRouter);
 
 db.sequelize
-  .authenticate()
+  .sync({ force: true })
   .then(() => {
     const port = process.env.PORT || 5000;
     app.listen(port, () => console.log(`Server listening on port ${port}`));
   })
-  .catch((error) => {
-    console.error("Unable to connect to the database:", error);
-  });
+  .catch((err) => console.log("Faild to connect DB: ", err));
