@@ -9,6 +9,10 @@ app.use(express.json());
 
 app.use("/posts", postRouter);
 
+app.use((_req, res) => {
+  res.status(404).json({ message: "Page not found!" });
+});
+
 db.sequelize
   .sync({ force: false })
   .then(() => {
