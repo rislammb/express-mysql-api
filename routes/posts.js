@@ -3,7 +3,7 @@ const { Post } = require("../models");
 
 router.get("/", async (_req, res) => {
   try {
-    const posts = await Post.findAll();
+    const posts = await Post?.findAll();
     return res.status(200).json(posts);
   } catch (error) {
     console.log("Error from get posts : ", error);
@@ -14,7 +14,7 @@ router.get("/", async (_req, res) => {
 router.post("/", async (req, res) => {
   const post = req.body;
   try {
-    const data = await Post.create(post);
+    const data = await Post?.create(post);
     return res.status(201).json(data);
   } catch (error) {
     console.log("Error from create post : ", error);
