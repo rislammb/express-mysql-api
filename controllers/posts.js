@@ -1,4 +1,4 @@
-const { Post } = require("../models");
+const { Post, Comment } = require("../models");
 
 const getAllPosts = async (_req, res) => {
   try {
@@ -6,22 +6,7 @@ const getAllPosts = async (_req, res) => {
     return res.status(200).json(posts);
   } catch (error) {
     console.log("Error from get posts : ", error);
-    return res.status(500).json(JSON.stringify(error));
-  }
-};
-
-const getSinglePost = async (req, res) => {
-  const id = req.params.id;
-  try {
-    const post = await Post.findOne({
-      where: {
-        id,
-      },
-    });
-    return res.status(200).json(post);
-  } catch (error) {
-    console.log("Error from get post : ", error);
-    return res.status(500).json(JSON.stringify(error));
+    return res.status(500).json(error);
   }
 };
 
@@ -32,8 +17,42 @@ const createPost = async (req, res) => {
     return res.status(201).json(data);
   } catch (error) {
     console.log("Error from create post : ", error);
-    return res.json(JSON.stringify(error));
+    return res.json(error);
   }
 };
 
-module.exports = { getAllPosts, getSinglePost, createPost };
+const getPostById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const post = await Post.findOne({
+      where: { id },
+      include: [{ model: Comment, as: "comments" }],
+    });
+    if (!post) {
+      return res.status(404).json({ message: "Post not found!" });
+    }
+    return res.status(200).json(post);
+  } catch (error) {
+    console.log("Error from get post : ", error);
+    return res.status(500).json(error);
+  }
+};
+
+const deletePostById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const data = await Post.destroy({ where: { id } });
+
+    if (data !== 1) {
+      return res.status(404).json({
+        message: `Post not found!`,
+      });
+    }
+    return res.status(204).json();
+  } catch (error) {
+    console.log("Error from delete post : ", error);
+    return res.status(500).json(error);
+  }
+};
+
+module.exports = { getAllPosts, createPost, getPostById, deletePostById };

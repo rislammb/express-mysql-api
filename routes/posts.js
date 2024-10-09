@@ -2,11 +2,13 @@ const router = require("express").Router();
 const {
   getAllPosts,
   createPost,
-  getSinglePost,
+  getPostById,
+  deletePostById,
 } = require("../controllers/posts");
 
-router.get("/:id", getSinglePost);
-router.get("/", getAllPosts);
+router.get("/:id", getPostById);
+router.delete("/:id", deletePostById);
 router.post("/", createPost);
+router.get("/", getAllPosts);
 
 module.exports = router;
