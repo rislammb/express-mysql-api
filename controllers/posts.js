@@ -1,8 +1,11 @@
-const { Post, Comment } = require("../models");
+// const { Post, Comment } = require("../models");
+
+const models = require("../models");
 
 const getAllPosts = async (_req, res) => {
+  Object.keys(models).forEach((model) => console.log("MODEL => ", model));
   try {
-    const posts = await Post.findAll();
+    const posts = await models.Post.findAll();
     return res.status(200).json(posts);
   } catch (error) {
     console.log("Error from get posts : ", error);
@@ -26,7 +29,7 @@ const getPostById = async (req, res) => {
   try {
     const post = await Post.findOne({
       where: { id },
-      include: [{ model: Comment, as: "comments" }],
+      include: [{ model: models.Comment, as: "comments" }],
     });
     if (!post) {
       return res.status(404).json({ message: "Post not found!" });
