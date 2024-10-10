@@ -38,12 +38,25 @@ const getPostById = async (req, res) => {
   }
 };
 
+const getPostsByUserName = async (req, res) => {
+  const username = req.params.username;
+  try {
+    const post = await Post.findAll({ where: { username } });
+    if (!post) {
+      return res.status(404).json({ message: "Post not found!" });
+    }
+    return res.status(200).json(post);
+  } catch (error) {
+    console.log("Error from get post : ", error);
+    return res.status(500).json(error);
+  }
+};
+
 const deletePostById = async (req, res) => {
   const id = req.params.id;
   try {
-    const data = await Post.destroy({ where: { id } });
-
-    if (data !== 1) {
+    const res = await Post.destroy({ where: { id } });
+    if (res !== 1) {
       return res.status(404).json({
         message: `Post not found!`,
       });
@@ -55,4 +68,27 @@ const deletePostById = async (req, res) => {
   }
 };
 
-module.exports = { getAllPosts, createPost, getPostById, deletePostById };
+const deletePostsByUserName = async (req, res) => {
+  const username = req.params.username;
+  try {
+    const res = await Post.destroy({ where: { username } });
+    if (res < 1) {
+      return res.status(404).json({
+        message: `Post not found!`,
+      });
+    }
+    return res.status(204).json();
+  } catch (error) {
+    console.log("Error from delete post : ", error);
+    return res.status(500).json(error);
+  }
+};
+
+module.exports = {
+  getAllPosts,
+  createPost,
+  getPostById,
+  getPostsByUserName,
+  deletePostById,
+  deletePostsByUserName,
+};
