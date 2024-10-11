@@ -1,18 +1,22 @@
 const express = require("express");
 const cors = require("cors");
 const db = require("./models");
-const postRouter = require("./routes/posts.js");
-const commentRouter = require("./routes/comments.js");
+const authRouter = require("./routes/auth");
+const userRouter = require("./routes/users");
+const postRouter = require("./routes/posts");
+const commentRouter = require("./routes/comments");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/auth", authRouter);
+app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
 
 app.use((_req, res) => {
-  res.status(404).json({ message: "Page not found!" });
+  res.status(404).json({ error: "Route not found!" });
 });
 
 db.sequelize

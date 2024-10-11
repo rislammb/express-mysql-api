@@ -5,10 +5,11 @@ const {
   getCommentsByPost,
   deleteCommentById,
 } = require("../controllers/comments");
+const authenticate = require("../middlewares/authenticate");
 
 router.get("/by-post-id/:postId", getCommentsByPost);
-router.delete("/:id", deleteCommentById);
-router.post("/", createComment);
+router.delete("/:id", authenticate, deleteCommentById);
+router.post("/", authenticate, createComment);
 router.get("/", getAllComments);
 
 module.exports = router;

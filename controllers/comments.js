@@ -1,8 +1,17 @@
-const { Comment } = require("../models");
+const { Post, Comment } = require("../models");
 
 const getAllComments = async (req, res) => {
+  const {
+    query: { page = 1, limit = 10 },
+  } = req;
+  const queryPage = Number(page),
+    queryLimit = Number(limit);
+
   try {
-    const comments = await Comment.findAll();
+    const comments = await Comment.findAll({
+      limit: queryLimit,
+      offset: (queryPage - 1) * queryLimit,
+    });
     return res.status(200).json(comments);
   } catch (error) {
     console.log("Error from get comments : ", error);
@@ -11,20 +20,35 @@ const getAllComments = async (req, res) => {
 };
 
 const createComment = async (req, res) => {
-  const comment = req.body;
+  const { body, username } = req;
   try {
-    const data = await Comment.create(comment);
+    const data = await Comment.create({ ...body, username });
     return res.status(201).json(data);
   } catch (error) {
     console.log("Error from create comment : ", error);
-    return res.json({ message: error.name ?? "Something went wrong!" });
+    return res.status(400).json(error);
   }
 };
 
 const getCommentsByPost = async (req, res) => {
-  const postId = req.params.postId;
+  const {
+    params: { postId },
+    query: { page = 1, limit = 10 },
+  } = req;
+  const queryPage = Number(page),
+    queryLimit = Number(limit);
+
   try {
-    const comments = await Comment.findAll({ where: { postId } });
+    const post = await Post.findOne({ where: { id: postId } });
+    if (!post) {
+      return res.status(404).json({ error: "Post not found!" });
+    }
+
+    const comments = await Comment.findAll({
+      where: { postId },
+      limit: queryLimit,
+      offset: (queryPage - 1) * queryLimit,
+    });
     return res.status(200).json(comments);
   } catch (error) {
     console.log("Error from get comments : ", error);
@@ -35,12 +59,10 @@ const getCommentsByPost = async (req, res) => {
 const deleteCommentById = async (req, res) => {
   const id = req.params.id;
   try {
-    const data = await Comment.destroy({ where: { id } });
+    const count = await Comment.destroy({ where: { id } });
 
-    if (data !== 1) {
-      return res.status(404).json({
-        message: `Comment not found!`,
-      });
+    if (count < 1) {
+      return res.status(404).json({ error: "Comment not found!" });
     }
     return res.status(204).json();
   } catch (error) {
