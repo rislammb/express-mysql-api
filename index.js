@@ -5,6 +5,7 @@ const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
 const postRouter = require("./routes/posts");
 const commentRouter = require("./routes/comments");
+const likeRouter = require("./routes/likes");
 
 const app = express();
 app.use(cors());
@@ -14,6 +15,7 @@ app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
+app.use("/likes", likeRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ error: "Route not found!" });

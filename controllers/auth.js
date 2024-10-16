@@ -42,7 +42,12 @@ const login = async (req, res) => {
   }
 };
 
+const verifyToken = (req, res) => {
+  res.status(200).json({ username: req.username });
+};
+
 module.exports = {
   createUser,
   login,
+  verifyToken,
 };

@@ -1,4 +1,4 @@
-const { User, Post, Comment } = require("../models");
+const { User, Post, Comment, Like } = require("../models");
 
 const getAllPosts = async (req, res) => {
   const {
@@ -47,6 +47,12 @@ const getPostById = async (req, res) => {
           as: "comments",
           limit: queryLimit,
           offset: (queryPage - 1) * queryLimit,
+        },
+        {
+          model: Like,
+          as: "likes",
+          // limit: queryLimit,
+          // offset: (queryPage - 1) * queryLimit,
         },
       ],
     });
